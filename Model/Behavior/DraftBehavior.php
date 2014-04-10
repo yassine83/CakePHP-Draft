@@ -28,4 +28,25 @@ class DraftBehavior extends ModelBehavior{
         return $model->deleteAll(array('online' => -1));
     }
 
+   /*
+   * le cas ou on veut avoir une libérté d'utilisation de id de l'objet bidon
+   * il creé un objet bidon et enregsitre son id dans la session en cours avec le 
+   * nom de variable exemple :Objet:Voiture -> variable session id_voiture
+   * c'est utile surtout avec l'ajout des annonces.
+   * merci de m'avoir donner vos remarques.
+   */
+
+    public function getDraftSessionId(Model $model){
+                  if(CakeSession::check('id_'.Inflector::humanize($model->name))==false){
+                      $model->create();
+                      $model->save(null,false);
+                    CakeSession::write('id_'.Inflector::humanize($model->name),$model->id);
+                    return CakeSession::read('id_'.Inflector::humanize($model->name));
+                     }
+                     else{
+                       return CakeSession::read('id_'.Inflector::humanize($model->name));
+                     }
+
+            
+        }
 }
